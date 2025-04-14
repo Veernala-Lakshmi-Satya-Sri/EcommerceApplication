@@ -3,6 +3,7 @@ package com.ecommerce.ecom.controller;
 
 import com.ecommerce.ecom.model.Category;
 import com.ecommerce.ecom.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class CategoryController {
        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
     @PostMapping("/api/public/categories")
-    public ResponseEntity<String> createCategories(@RequestBody Category category) {
+    public ResponseEntity<String> createCategories(@Valid @RequestBody Category category) {
 
          String status =categoryService.createCategory(category);
          return new ResponseEntity<String>(status,HttpStatus.CREATED);
@@ -33,29 +34,20 @@ public class CategoryController {
 
     @DeleteMapping("/api/admin/categories/{categoryId}")
     public ResponseEntity<String> deleteCategories(@PathVariable Long categoryId) {
-
-        try {
-            String status= categoryService.deleteCategory(categoryId);
+         String status= categoryService.deleteCategory(categoryId);
             return new ResponseEntity<String>(status, HttpStatus.OK);
 
-        }
-        catch (ResponseStatusException e) {
-            return new ResponseEntity<String>(e.getReason(), e.getStatusCode());
-        }
+
     }
 
 
     @PutMapping("/api/admin/categories/{categoryId}")
-    public ResponseEntity<String> updateCategories(@RequestBody Category category,
+    public ResponseEntity<String> updateCategories(@Valid @RequestBody Category category,
                                                    @PathVariable Long categoryId) {
 
-        try {
             Category updatedCategory= categoryService.updateCategory(category, categoryId);
             return new ResponseEntity<String>("Category with ID : "+categoryId+ " updated", HttpStatus.OK);
 
-        }
-        catch (ResponseStatusException e) {
-            return new ResponseEntity<String>(e.getReason(), e.getStatusCode());
-        }
+
     }
 }
